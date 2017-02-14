@@ -1,0 +1,62 @@
+#!/usr/bin/python3
+
+
+#	ddrumimg : the ddrum plus! image builder
+
+#	This program is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+
+#	This program is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+
+#	You should have received a copy of the GNU General Public License
+#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#	TODO:
+#
+
+
+import wave, struct, math, argparse
+
+
+#Size of the sound (in samples)
+N_SAMPLES = 8192
+
+##main argument
+#check the arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('inputFile1')
+parser.add_argument('inputFile2')
+parser.add_argument('inputFile3')
+parser.add_argument('inputFile4')
+parser.add_argument('outputFile')
+args = parser.parse_args()
+
+#open the four files
+if1 = open(args.inputFile1, "rb")
+if2 = open(args.inputFile2, "rb")
+if3 = open(args.inputFile3, "rb")
+if4 = open(args.inputFile4, "rb")
+
+#read the contents ofthe binary files
+b1 = if1.read()
+b2 = if2.read()
+b3 = if3.read()
+b4 = if4.read()
+
+if (len(b1) < N_SAMPLES) and (len(b2) < N_SAMPLES) and (len(b3) < N_SAMPLES) and (len(b4) < N_SAMPLES):
+	print("wrong size input files, must be 8192 bytes")
+	sys.exit(0)
+		
+#open the output file
+output_file = open(args.outputFile, "wb")
+#write the binaries of the four input files to the output file
+output_file.write(b1)
+output_file.write(b2)
+output_file.write(b3)
+output_file.write(b4)

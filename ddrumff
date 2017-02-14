@@ -1,0 +1,67 @@
+#!/usr/bin/python3
+
+
+#	ddrumff : the ddrum plus! file formater
+
+#	This program is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	(at your option) any later version.
+
+#	This program is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+
+#	You should have received a copy of the GNU General Public License
+#	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#	TODO:	check the size of the real samples_max
+#			check data format (here, straight up unsigned PCM)
+#
+
+
+import wave, struct, math, argparse
+
+
+#Size of the sound (in samples)
+N_SAMPLES = 8192
+
+##function(s)	
+#converts a signed sample to 8bit, unsigned	
+def convert(sample_list):
+	output_list = []
+	#find the max
+	samples_max = max(sample_list)
+	for i in range(0, N_SAMPLES):
+		temp_sample = (sample_list[i]/(2*samples_max) + 0.5)
+		output_list.append(math.floor(temp_sample*256))
+	return output_list
+
+##main argument
+#check the arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('inputFile')
+parser.add_argument('outputFile')
+args = parser.parse_args()
+
+#open the file and print out informations about it
+wav_file = wave.open(args.inputFile)
+print("Number of channels : ", wav_file.getnchannels())
+print("Bit per sample : ", wav_file.getsampwidth()*8, "bits")
+print("Sampling fraquency : ", wav_file.getframerate(), "Hz")
+print("Number of samples : ", wav_file.getnframes())
+
+#get the audio data out of it
+length = wav_file.getnframes()
+sample_data = []
+for i in range(0,length):
+    wave_data = wav_file.readframes(1)
+    data = struct.unpack("<h", wave_data)
+    sample_data.append(int(data[0]))
+o_list = convert(sample_data)
+
+#write the output file
+output_file = open(args.outputFile, "wb")
+output_file.write(bytes(o_list))
