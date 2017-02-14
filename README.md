@@ -13,7 +13,7 @@ A simple set of tools to build EPROM sample images for the Clavia ddrum Plus! dr
  - ddrumimg [inputFile1] [inputFile2] [inputFile3] [inputFile4] [outputFile-
     - packs the four input sample files into an EPROM image ready to be flashed to a memory chip
 
-## Dependecies :
+## Dependencies :
  - python3
 
 ## Notes :
